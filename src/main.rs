@@ -1,13 +1,17 @@
-use std::env;
+use std::env::args;
 use std::fs;
-fn main() {
-    let file_name = env::args().skip(1).next().expect("Usage: cargo run -- inputfilename\n");
-    
-    let mut total = 0.0;
+use std::error::Error;
 
-    for line in fs::read_to_string(file_name).unwrap().lines() {
-        let num: f64 = line.trim().parse().unwrap();
+fn main() -> Result<(), Box<dyn Error>> {
+    let file_name = args().nth(1).ok_or("Please provide a filename")?;
+    
+    let mut total = 0;
+
+    let lines = fs::read_to_string(file_name)?;
+    for line in lines.lines() {
+        let num: i32 = line.trim().parse()?;
         total = total + num;
     }
-    println!("{total}");    
+    println!("{total}");   
+    Ok(()) 
 }
